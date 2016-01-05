@@ -1,10 +1,35 @@
+# *************************************************************************************
+#
+#  @author - Arrash
+#  @last_modified - 1/4/2016
+#  @date - 1/4/2016
+#  @version - 1.0.0
+#  @purpose - This is the logic page of the Flask application for Derived Attributes
+#  this will communicate with the logic.py page in order to complete tasks
+#
+# *************************************************************************************
+
 import csv
 import re
 from datetime import datetime
 
+# *************************************************************************************
+#
+# This class performs all the computation for the uploaded file from CS that needs to have
+# derived attribute
+#
+# *************************************************************************************
+
 class Upload(object):
 	def __init__(self, file_passed):
 		self.passed = file_passed
+
+# *************************************************************************************
+#
+# This is a function that spits back the dictionary which the proper formatting to pass
+# back for routing
+#
+# *************************************************************************************
 
 	@staticmethod
 	def error_check(error, receipt):
@@ -13,6 +38,13 @@ class Upload(object):
 			'receipt' :	receipt
 		}
 		return resp
+
+# *************************************************************************************
+#
+# This is for the initial upload. It will read the csv and convert everything into an
+# array within an array
+#
+# *************************************************************************************
 
 	def uploader_csv(self):
 		fileUploaded = self.passed
@@ -25,6 +57,8 @@ class Upload(object):
 		}
 		return vals
 
+# *************************************************************************************
+#
 # this method will take the values that have been chosen for the drop down options for the different fields 
 # and automatically create the additional columns necessary based on the values passed. The values it calculates are 
 # based on 8 fields. The Date Type field, the Original Hire Date, the Position's Start Date, the Email Address, 
@@ -38,20 +72,32 @@ class Upload(object):
 # -> Indirects : Lookup logic based on the manager employee ID and mapping of values and the manager hierarchy (rows_by_manager_id, manager_indirects, rows_by_email address)
 # -> Time in Position : Current Date - Position Start Date
 # -> Manager Email : email address of the manager based on the Manager Employee ID
+#
+# *************************************************************************************
 
 	def preview(self):
+		# This is the dictionary that has been passed in that holds a variety of values, such as the csv, dateFormat, and the field locations
 		vals = self.passed
+		# This bool lets us know if there is a critical error that has occurred. If there has been one it will become true
 		no_error = True
+		# This dictionary just lets us know if there has been an error.
 		error = {"no date chosen": 0, "missing age fields": 0, "missing essential date fields": 0, "missing termination date": 0, "missing manager fields": 0, "manager missing": 0}
+		# X is used for the first iteration of the loop through the csv array
 		x = 0
+		# positions holds the location of all of the fields that are used to be manipulated
 		positions = vals['positions']
+		# csv is the actual csv that has been converted to an array within an array
 		csv = vals['csv']
+		# this is essentially a boolean that helps us determine if age is used or if birth year has been used
 		age = 0
+		# This is testing to see if dateformat is available. If its not available then perform no more logic and pass back the error
+		# if at any point no_error is False then there will be no more computation of values
 		if positions['dateFormat'] != "None":
 			date = positions['dateFormat']	
 		else:
 			no_error = False
 			error["no date chosen"] = 1	
+		# checking to see if age exists or if its birthYear thats provided
 		try:
 			positions['age']
 		except KeyError:
@@ -373,6 +419,13 @@ class Upload(object):
 				    manager_list.append(manager)
 				return self.error_check(error, manager_list)
 		return self.error_check(error, csv)
+
+# *************************************************************************************
+#
+# This is the function that communicates with route.py in order to perform specific
+# functions. 
+#
+# *************************************************************************************
 
 def initiater(run, val):
 	if run == "uploader":

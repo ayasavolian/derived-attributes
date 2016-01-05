@@ -1,3 +1,14 @@
+# *************************************************************************************
+#
+#  @author - Arrash
+#  @last_modified - 1/4/2016
+#  @date - 1/4/2016
+#  @version - 1.0.0
+#  @purpose - This is the routing page of the Flask application for Derived Attributes
+#  this will communicate with the logic.py page in order to complete tasks
+#
+# *************************************************************************************
+
 from flask import *
 from logic import *
 import string
@@ -14,6 +25,13 @@ app = Flask(__name__)
 app.secret_key = "F8u15h9hgd09hgaw4nogo23i188"
 
 
+# *************************************************************************************
+#
+# This is the actual home page that should run the upload.html page and allow CS
+# to upload whatever file they receive from the customer and automatically derive attributes
+#
+# *************************************************************************************
+
 @app.route("/")
 def home():
 	return render_template('upload.html')
@@ -22,14 +40,26 @@ def home():
 def upload_route():
 	return render_template('upload.html')
 
+# *************************************************************************************
+#
+# This will accept the uploaded file and pass the file to a function in logic that will
+# turn the file into an array within an array to be displayed to the user on the FE
+#
+# *************************************************************************************
+
 @app.route("/uploader", methods=['POST'])
 def uploader_route():
 	if request.method == 'POST':
-		print "01"
 		csv = request.files['file']
 		uploaded = initiater("uploader", csv)
-		print "05"
 		return json.dumps(uploaded)
+
+# *************************************************************************************
+#
+# This will accept the uploaded file and pass the file to a function in logic that will
+# turn the file into an array within an array to be displayed to the user on the FE
+#
+# *************************************************************************************
 
 @app.route("/upload-preview", methods=['POST'])
 def upload_preview():
@@ -37,6 +67,17 @@ def upload_preview():
 		data = request.json
 		preview = initiater("preview", data)
 		return json.dumps(preview)
+
+# *************************************************************************************
+#
+# this route provides the user with the final csv thats pushed into their downloads
+# folder after the attributes are derived. We do this by taking the dictionary thats
+# provided and splitting the dictionary upon commas. We then split for end of the line
+# using the length of the arrays within the dictionary which is provided by "length". 
+# After we turn the array into an excel sheet using pe and save it to memory to pass
+# back to the user.
+#
+# *************************************************************************************
 
 @app.route("/download-csv", methods=['POST'])
 def download():
