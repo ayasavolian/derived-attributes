@@ -1,0 +1,25 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<link rel="stylesheet" type="text/css"  href="{{ url_for('static', filename='css/global.css') }}" />
+	<link rel="stylesheet" type="text/css"  href="{{ url_for('static', filename='css/manager.css') }}" />
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+	<script type="text/javascript" src="{{ url_for('static', filename='js/manager.js') }}"></script>
+	<title></title>
+</head>
+<body>
+	<div id = "first" class = "manager-form">
+		<div class = "field-container">
+			<div class = "label"> Manager Attribute </div>
+			<input type = "text" id = "manager-attribute" class = "input-text"></input>
+		</div>
+		<div class = "field-container">
+			<div class = "label"> Client Attribute </div>
+			<input type = "text" id = "client-attribute" class = "input-text"></input>
+		</div>
+		<div id = "submit-manager" class = "submit-button">
+			Submit
+		</div>
+	</div>
+</body>
+</html>

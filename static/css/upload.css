@@ -1,0 +1,154 @@
+.upload-file{
+	width: 100px;
+	text-align: center;
+	color: #fff;
+	background-color: #00bfff;
+	font-size: 14px;
+	cursor: pointer;
+	border: none;
+	border-radius: 5px;
+}
+.float-left{
+	float: left;
+}
+.column{
+	min-width: 300px;
+	height: 15px;
+	padding-left: 5px;
+	padding-top: 3px;
+	border-right: 1px solid #ccc;
+	text-overflow: clip;
+}
+.column-header-container{
+	margin-top: 25px;
+	margin-left: 15px;
+    display: inline-block;
+}
+.column-header{
+	width: 300px;
+    height: 15px;
+    padding-left: 5px;
+    padding-top: 3px;
+    padding-bottom: 5px;
+    border: 1px solid #ccc;
+    display: inline-block;
+    text-overflow: clip;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+.display{
+	display: inline-block;
+}
+.block{
+	display: block;
+}
+.upload-width{
+	width: 170px;
+}
+.total-width{
+	width: 100%;
+}
+.form {
+	margin-left: 15px;
+	margin-top: 15px;
+}
+.overflow{
+	white-space:nowrap;
+}
+.bold{
+	font-weight: bold;
+}
+.fields-header{
+	float: left;
+	padding-left: 50px;
+	padding-top: 3px;
+}
+.fields-container{
+	margin-top: 15px;
+	margin-left: 15px;
+}
+.save{
+	width: 443px;
+    margin-left: 15px;
+	padding-top: 5px;
+	height: 25px;
+	background-color: #00bfff;
+	color: #fff;
+	font-size: 18px;
+	border-radius: 5px;
+	text-align: center;
+	/*display: none;*/
+	font-weight: 200;
+	cursor: pointer;
+}
+.download{
+	margin-top: 15px;
+	width: 443px;
+    margin-left: 15px;
+	height: 30px;
+	background-color: #00bfff;
+	color: #fff;
+	font-size: 18px;
+	border-radius: 5px;
+	text-align: center;
+	border: none;
+	/*display: none;*/
+	font-weight: 200;
+	cursor: pointer;
+}
+.date-container{
+	margin-top: 30px;
+	margin-left: 15px;
+	margin-bottom: 30px;
+	width: 500px;
+	display: none;
+}
+.date-selection-container{
+	width: 500px;
+}
+.date-header{
+	font-size: 18px;
+}
+.date-format-header{
+	font-size: 18px;
+	margin-top: 15px;
+}
+.error-thrown-container{
+	width: 500px;
+	margin: 25px;
+	padding: 10px;
+	background-color: #FF9999;
+	border: 1px solid #FF6666;
+	border-radius: 5px;
+	color: #fff;
+	font-size: 18px;
+	text-align: center;
+	display: none;
+}
+.tenure-title-container, .tenure, .tenure-margin{
+	margin-right: 15px;
+}
+#tenure-container, #generation-container, #download-button, #save-button{
+	display: none;
+	margin-top: 15px;
+}
+#add-generation, #add-tenure {
+	display: none;
+	cursor: pointer;
+}
+.tenure-selection, .generation-selection{
+	margin: 10px 0;
+}
+.add-generation-option{
+	text-align: center;
+	color: #fff;
+	background-color: #00bfff;
+	padding: 2px 15px;
+	border-radius: 5px;
+	margin-left: 15px;
+}
+.instructions{
+	color: #900202;
+	padding: 15px 0;
+}

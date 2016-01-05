@@ -1,0 +1,151 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<link rel="stylesheet" type="text/css"  href="{{ url_for('static', filename='css/global.css') }}" />
+	<link rel="stylesheet" type="text/css"  href="{{ url_for('static', filename='css/upload.css') }}" />
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+	<script type="text/javascript" src="{{ url_for('static', filename='js/upload.js') }}"></script>
+	<title></title>
+</head>
+<body>
+	<div id = "first" class = "display total-width form">
+		<form enctype="multipart/form-data">
+		    <input class = "float-left upload-width" id="upload" name="file" type="file" />
+		    <input class = "upload-file float-left" type="button" value="Upload" />
+		</form>
+	</div>
+	<div id = "error" class = "error-thrown-container">
+	</div>
+	<div class = "fields-container display">
+		<div class = "fields-header-container display">
+			<div class = "column-header float-left">
+				Field
+			</div>
+			<div class = "fields-header float-left">
+				Options
+			</div>
+		</div>
+		<div id = "columns">
+		</div>
+	</div>
+	<div id = "date-options" class = "date-container">
+		<div class = "date-header">
+			Date Information
+		</div>
+		<div class = "instructions">
+			Make sure to put a date format which is correlated to the Start Date, Termination Date, and Start Date in Current Position. <br>
+			Also, if you need to specify custom date formats that don't follow below choose "Custom". <br><br>
+			Tenure: <br><br>
+			-> <1 Year <br>
+			-> 1-2 Years <br>
+			-> 2-3 Years <br>
+			-> 3-4 Years <br>
+			-> 4-5 Years <br> 
+			-> 5-7 Years <br>
+			-> 7+ Years <br><br>
+			Generation: <br><br>
+			-> G.I. Generation <1925 <br>
+			-> Silent Generation 1925-1946 <br>
+			-> Baby Boomer 1946-1965 <br>
+			-> Generation X 1965-1980 <br>
+			-> Generation Y 1980-2000 <br>
+			-> Generation Z 2000+ <br>
+		</div>
+		<div class = "date-format-header">
+			Date Format
+		</div>
+		<div class = "date-format-option">
+			<select id = "date-format">
+				<option value="none">None</option>
+				<option value="normal">mm/dd/yyyy or mm-dd-yyyy</option>
+				<option value="short">mm/dd/yy or mm-dd-yy</option>
+				<option value="european">dd/mm/yyyy or dd-mm-yyyy</option>
+				<option value="europeanShort">dd/mm/yy or dd-mm-yy</option>
+				<option value="reverseLong">yyyy/mm/dd or yyyy-mm-dd</option>
+			</select>
+		</div>
+		<div class = "date-format-header">
+			Tenure Format
+		</div>
+		<div class = "instructions">
+			This is in days (ex. 1 to 365 would be <1 year) Make sure every tenure has a start and end date. On the largest tenure, make sure to put "999999999" for the end date. 
+		</div>
+		<div class = "tenure-option display">
+			<select id = "tenure-format" class = "float-left">
+				<option value="none">Default</option>
+				<option value="normal">Custom</option>
+			</select>
+			<div id = "add-tenure" class = "add-generation-option float-left">
+				Add Tenure Range
+			</div>	
+		</div>
+		<div class = "date-selection-container">
+			<div id = "tenure-container">
+				<div id = "tenure-selection">
+					<div id = "custom-tenure1" class = "tenure">
+						<div class = "tenure-title-container display">
+							<div class = "custom-tenure-title" class = "float-left">
+								Tenure Title:
+							</div>
+							<input type = "text" id = "tenure-title1" class = "float-left">
+						</div>
+						<div class = "custom-tenure-container display">
+							<div class = "custom-tenure-label" class = "float-left">
+								Range in Days:
+							</div>
+							<input placeholder = "Start" type = "number" id = "custom-tenure-start1" class = "float-left tenure-margin"> 
+							<input placeholder = "End" type = "number" id = "custom-tenure-end1" class = "float-left">
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class = "date-format-header">
+			Generation Format
+		</div>
+		<div class = "instructions">
+			Make sure every generation has a start and end year.
+		</div>
+		<div class = "generation-option display">
+			<select id = "generation-format" class = "float-left">
+				<option value="none">Default</option>
+				<option value="normal">Custom</option>
+			</select>
+			<div id = "add-generation" class = "add-generation-option float-left">
+				Add Generation Range
+			</div>	
+		</div>
+		<div class = "date-selection-container">
+			<div id = "generation-container">
+				<div id = "generation-selection">
+					<div id = "custom-generation1" class = "generation">
+						<div class = "tenure-title-container display">
+							<div class = "custom-tenure-title" class = "float-left">
+								Generation Title:
+							</div>
+							<input type = "text" id = "generation-title1" class = "float-left">
+						</div>
+						<div class = "custom-tenure-container display">
+							<div class = "custom-tenure-label" class = "float-left">
+								Year Range:
+							</div>
+							<input placeholder = "Start" type = "number" id = "custom-generation-start1" class = "float-left tenure-margin"> 
+							<input placeholder = "End" type = "number" id = "custom-generation-end1" class = "float-left">
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div id = "save-button" class = "save">
+		Commit Changes
+	</div>
+	<form id="myForm" action="/download-csv" method="post">
+  		<input type='hidden' id= 'csv' name='csv' value= '' />
+  		<input type='hidden' id= 'length' name='length' value= '' />
+		<input type="submit" id = "download-button" class = "download" value="Download" />
+	</form>
+	<div id = "second" class = "display column-header-container overflow">
+	</div>
+</body>
+</html>
