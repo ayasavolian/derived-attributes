@@ -1,8 +1,8 @@
 # *************************************************************************************
 #
 #  @author - Arrash
-#  @last_modified - 1/4/2016
-#  @date - 1/4/2016
+#  @last_modified - 1/5/2016
+#  @date - 1/5/2016
 #  @version - 1.0.0
 #  @purpose - This is the logic page of the Flask application for Derived Attributes
 #  this will communicate with the logic.py page in order to complete tasks
@@ -105,12 +105,14 @@ class Upload(object):
 		else:
 			age = 1
 			age_num = positions['age']
+		# checking to see if birthYear is there and if age hasnt already been chosen
 		try:
 			positions['birthYear'] and age != 0
 		except KeyError:
 			error["missing age fields"] = 1
 		else:
 			birth_year_num = positions['birthYear']
+		# check to see if the hiredate and startdate are there. these are essential fields
 		try:
 			str(positions['hireDate']) and str(positions['startDate']) and no_error
 		except KeyError:
@@ -119,29 +121,42 @@ class Upload(object):
 		else:		
 			hire_date = positions['hireDate']
 			start_date = positions['startDate']
+		# checking to see if termination date is there
 		try:
 			str(positions['terminationDate']) and no_error
 		except KeyError:
 			error["missing termination date"] = 1
 		else:		
 			termination_date = positions['terminationDate']
+		# checking to see if manager employee ID and email address are available
 		try:
 			str(positions['managerEmployeeID']) and str(positions['employeeID']) and str(positions['email']) and no_error
 		except KeyError:
 			error["missing manager fields"] = 1
 		else:
+			# if they are then we are going to do some computation
 			employee_manager_ID = positions['managerEmployeeID']
 			employee_ID = positions['employeeID']
 			email_address = positions['email']
+			# take out the header field names from the csv
 			no_header_csv = csv[1:]
+			# create three different list comprehensions. One for the manager ID related to the employee
+			# one for the number of indirects the manager has, and one for the email address related to the employee
 			rows_by_manager_id = dict((arr[employee_ID], arr[employee_manager_ID]) for arr in no_header_csv)
 			manager_indirects = dict((arr[employee_ID], 0) for arr in no_header_csv)
 			rows_by_email_address = dict((arr[employee_ID], arr[email_address]) for arr in no_header_csv)
+			# manager undefined is an array of all of the manager's that dont exist (if they don't exist)
 			manager_undefined = []
+			# manager list is the list of managers if they exist with no errors
 			manager_list = []
+			# manager hierarchy is the dictionary of the manager hierarchy per employee
 			manager_hierarchy = {}
+			# dictionary of manager emails by id 
 			manager_email_by_id = {}
+			# keeping track of the number of directs for all managers
 			manager_directs = {}
+			# this loop will iterate through all of the employees manager IDs in the length of the no header csv 
+			# and it will map the employee manager email address to the employee
 			for arr in rows_by_manager_id:
 				try:
 					rows_by_email_address[str(rows_by_manager_id[arr])]
@@ -152,6 +167,9 @@ class Upload(object):
 				else:
 					manager_email_by_id[rows_by_manager_id[arr]] = rows_by_email_address[str(rows_by_manager_id[arr])]
 					manager_directs[rows_by_manager_id[arr]] = 0
+			# if it survived without erroring out on any manager existing in the csv, then it will iterate
+			# again through the csv and it will go up the chain of command and put together the manager hierarchy and place it within the 
+			# manager hierarchy dictionary for every employee
 			if no_error:
 				for arr in no_header_csv:
 					hierarchy = True
@@ -180,7 +198,9 @@ class Upload(object):
 					else:
 						pass
 		if no_error:
+			# if there are no missing manager fields then continue
 			if error["missing manager fields"] == 0:
+				# this loop will calculate the number of directs and place it in manager_directs
 				for arr in csv:
 					try:
 						manager_directs[str(arr[employee_manager_ID])]
@@ -188,6 +208,8 @@ class Upload(object):
 						pass
 					else:
 						manager_directs[str(arr[employee_manager_ID])] = int(manager_directs[str(arr[employee_manager_ID])]) + 1
+				# this loop will calculate the number of indirects for each manager by adding up the number of directs using
+				# the manager hierarchy for each manager in the manager directs list all the way up the chain of command
 				for arr in manager_directs:
 					try:
 						manager_hierarchy[arr]
@@ -196,7 +218,9 @@ class Upload(object):
 					else:
 						for i in xrange(1,len(manager_hierarchy[arr])+1):
 							manager_indirects[str(manager_hierarchy[arr][i])] += manager_directs[arr]
+			# we will now add all of the values/columns to the original csv 
 			for array in csv:
+				# add in the headers if there are no errors for their values
 				if x == 0:
 					array.append("Tenure")
 					array.append("Generation")
@@ -209,6 +233,8 @@ class Upload(object):
 						array.append("Active/Inactive")
 					x = 1
 				else:
+					# because the formatting for the dates can have only 2 values in the years we need to be able to swap out 
+					# and keep formatting consistent in order to subtract the date value from the current date for various values
 					dash = r'-'
 					slash = '/'
 					person_hire_date = array[hire_date]
@@ -230,6 +256,7 @@ class Upload(object):
 					long_date_reverse_format_chosen = r'\d{4}[\/\-]\d{1,2}[\/\-]\d{1,2}'
 					date_format_chosen = r'\d{1,2}[\/\-]\d{1,2}[\/\-]\d{1,2}'
 					short_end = r'\d{2}$'
+					# checking to see what type of formatting was chosen for the values 
 					if date == "mm/dd/yy or mm-dd-yy":
 						m = re.findall(date_format_chosen, person_hire_date)
 						if m:
@@ -257,7 +284,6 @@ class Upload(object):
 							final_hire_date = datetime.strptime(person_hire_date, '%m/%d/%Y')
 						else:
 							return self.error_check("date format match", csv)
-							# return "date format chosen does not match the date of the actual field"
 					elif date == "mm/dd/yyyy or mm-dd-yyyy":
 						m = re.findall(long_date_format_chosen, person_hire_date)
 						if m:					
@@ -317,15 +343,18 @@ class Upload(object):
 							return error_check("date format match", csv)
 					else:
 						return self.error_check("no date chosen", csv)
+					# finding the difference for the date they started at the company and the date they started in their position
 					curr_date = datetime.now()
 					year = datetime.now().year
 					final_time_diff = abs((curr_date - final_start_date).days)
 					final_start_time_diff = abs((curr_date - final_hire_date).days)
+					# check to see if they chose age or if they chose the year they were born
 					if age_num:
 						year_born = year - int(array[age_num])
 					elif birth_year_num:
 						year_born = int(array[birth_year_num])
-					if  not vals['generationArr']:
+					# check to see if they chose the generic values for generation and tenure or if they chose something custom
+					if not vals['generationArr']:
 						if year_born < 1925:
 							generation = "G.I. Generation"
 						elif year_born >= 1925 and year_born <= 1946:
@@ -340,10 +369,8 @@ class Upload(object):
 							generation = "Generation Z"
 					else:
 						for gen in vals['generationArr']:
-							print gen
 							if year_born > int(gen['start']) and year_born <= int(gen['end']):
 								generation = gen['title']
-								print generation
 								break
 						if generation is None:
 							generation = vals['generationArr'][len(vals['generationArr'])-1]['title']
@@ -377,6 +404,8 @@ class Upload(object):
 						else:
 							start_tenure = "7+ Years"
 					else:
+						# if they chose something custom then we need to be able to check to see which the person falls into
+						# for the tenure and for the generation values that were chosen
 						for ten in vals['tenureArr']:
 							if final_time_diff > int(ten['start']) and final_time_diff <= int(ten['end']):
 								tenure = ten['title']
@@ -389,6 +418,7 @@ class Upload(object):
 					array.append(start_tenure)
 					array.append(generation)
 					array.append(tenure)
+					# only append the values if the manager field wasnt missing
 					if error["missing manager fields"] == 0:
 						final_manager_email = manager_email_by_id[str(array[employee_manager_ID])]
 						array.append(final_manager_email)
@@ -413,6 +443,8 @@ class Upload(object):
 					elif error["missing termination date"] == 0:
 						array.append("ACTIVE")
 		else:
+			# if the manager is missing then we need to be able to loop through the list of missing managers and 
+			# notify the user
 			if error["manager missing"] == 1:
 				for manager in manager_undefined:
 				  if manager not in manager_list:
